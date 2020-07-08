@@ -48,14 +48,14 @@ block market_view
         .card-header
           strong= t('market.market_title',{market : t('exchange.graviex'),coin :  marketdata.coin, exchange : marketdata.exchange })
           a(href='#')
-            span.fa.fa-th-list.pull-right.view-summary.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom',  title= t('market.view_summary')) 
-        .card-body
+            span.fa.fa-th-list.pull-right.view-summary.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title=settings.locale.mkt_view_summary) 
+        .panel-body
           div#chart(style="width:100%;height:300px;")
       #summary-card.card.card-default
         .card-header
           strong= t('market.market_title',{market : t('exchange.graviex'),coin :  marketdata.coin, exchange : marketdata.exchange })
           a(href='#')
-            span.fa.fa-line-chart.pull-right.view-chart.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom',  title= t('market.view_chart')) 
+            span.fa.fa-line-chart.pull-right.view-chart.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title=settings.locale.mkt_view_chart) 
         table.table.table-bordered.summary-table 
           thead
             tr

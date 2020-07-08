@@ -2,6 +2,20 @@ extends layout
 
 block content
   script.
+    var setting_maxTxCount = parseInt("#{settings.index.last_txs}");
+    var setting_txPerPage = parseInt("#{settings.index.txs_per_page}");
+    var lengthMenuOpts = [];
+    var lengthMenuOptsAdd = [ 10, 25, 50, 75, 100, 250, 500, 1000 ];
+    for (i=0; i < lengthMenuOptsAdd.length; i++) {
+      if (setting_maxTxCount >= lengthMenuOptsAdd[i]) {
+        lengthMenuOpts.push(lengthMenuOptsAdd[i]);
+      }
+    }
+    if (setting_maxTxCount < setting_txPerPage) {
+      var displayLengthMax = setting_maxTxCount;
+    } else {
+      var displayLengthMax = setting_txPerPage;
+    }
     $(document).ready(function(){
       var stable = $('#block-table').dataTable( {  
         autoWidth: true,      
@@ -34,20 +48,24 @@ block content
         searching: false,
         ordering: false,
         responsive: false,
-        lengthChange: false,
+        lengthChange: true,
         processing: true,
         serverSide: true,
-        ajax: '/ext/getlasttxsajax',
+        iDisplayLength: displayLengthMax,
+        lengthMenu: lengthMenuOpts,
+        ajax: '/ext/getlasttxsajax/0',
         rowCallback: function(row, data, index) {
           var blockindex = data[0]; //variables for better readability
           var blockhash = data[1]; //variables for better readability
           var txhash = data[2]; //variables for better readability
           var outputs = data[3]; //variables for better readability
-          var amount = data[4]; //variables for better readability
+          var amount = (data[4] / 100000000).toLocaleString('en',{'minimumFractionDigits':2,'maximumFractionDigits':8,'useGrouping':true}); //variables for better readability
+          var amountParts = amount.split('.');
+          var amount = amountParts[0] + '.<span class="decimal">' + amountParts[1] + '</span>';
           var timestamp = data[5]; //variables for better readability
           $("td:eq(0)", row).html('<a href="/block/' + blockhash + '">' + blockindex + '</a>');
-          $("td:eq(1)", row).html('<a href="/tx/' + txhash + '">' + txhash + '</a>').addClass("d-none d-md-none d-lg-table-cell text-center");
-          $("td:eq(2)", row).html(outputs).addClass("d-none d-md-none d-lg-table-cell text-center");
+          $("td:eq(1)", row).html('<a href="/tx/' + txhash + '">' + txhash + '</a>').addClass("d-none d-md-none d-lg-table-cell text-center hidden-xs");
+          $("td:eq(2)", row).html(outputs).addClass("d-none d-md-none d-lg-table-cell text-center hidden-xs");
           $("td:eq(3)", row).html(amount);
           $("td:eq(4)", row).html(timestamp);          
         },

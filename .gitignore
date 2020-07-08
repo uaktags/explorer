@@ -30,7 +30,7 @@ settings.json
 *.ico
 *.png
 
+
+.DS_Store
+
 package-lock.json
-scripts/master.js
-scripts/worker.js
-scripts/sync.ps1

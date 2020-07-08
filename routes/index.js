@@ -94,7 +94,13 @@ function route_get_tx(res, txid) {
 }
 
 function route_get_index(res, error) {
-  res.render('index', { active: 'home', error: error, warning: null});
+  db.is_locked(function(locked) {
+    if (locked) {
+      res.render('index', { active: 'home', error: error, warning: locale.initial_index_alert});
+    } else {
+      res.render('index', { active: 'home', error: error, warning: null});
+    }
+  });
 }
 
 function route_get_address(res, hash) {
@@ -277,7 +283,7 @@ router.get('/reward', function(req, res){
         } else if (a.count > b.count) {
           return 1;
         } else {
-         return 0;
+          return 0;
         }
       });
 
@@ -294,8 +300,16 @@ router.get('/block/:hash', function(req, res) {
   route_get_block(res, req.params.hash);
 });
 
+router.get('/address/:hash/claim', function(req,res){
+  route_get_claim_form(res, req.params.hash);
+});
+
 router.get('/address/:hash', function(req, res) {
   route_get_address(res, req.params.hash, settings.txcount);
+});
+
+router.get('/address/:hash/:count', function(req, res) {
+  route_get_address(res, req.params.hash, req.params.count);
 });
 
 router.post('/search', function(req, res) {
@@ -338,8 +352,8 @@ router.post('/search', function(req, res) {
 });
 
 router.get('/qr/:string', function(req, res) {
-  if (req.param('string')) {
-    var address = qr.image(req.param('string'), {
+  if (req.params.string) {
+    var address = qr.image(req.params.string, {
       type: 'png',
       size: 4,
       margin: 1,
@@ -354,12 +368,12 @@ router.get('/ext/summary', function(req, res) {
   lib.get_difficulty(function(difficulty) {
     difficultyHybrid = ''
     if (difficulty['proof-of-work']) {
-            if (settings.index.difficulty == 'Hybrid') {
-              difficultyHybrid = 'POS: ' + difficulty['proof-of-stake'];
-              difficulty = 'POW: ' + difficulty['proof-of-work'];
-            } else if (settings.index.difficulty == 'POW') {
-              difficulty = difficulty['proof-of-work'];
-            } else {
+      if (settings.index.difficulty == 'Hybrid') {
+        difficultyHybrid = 'POS: ' + difficulty['proof-of-stake'];
+        difficulty = 'POW: ' + difficulty['proof-of-work'];
+      } else if (settings.index.difficulty == 'POW') {
+        difficulty = difficulty['proof-of-work'];
+      } else {
         difficulty = difficulty['proof-of-stake'];
       }
     }

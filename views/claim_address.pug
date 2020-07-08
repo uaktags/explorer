@@ -32,13 +32,15 @@ block content
         });
 
       });
-  - var balance = (address.received - address.sent) / 100000000;
-  - var sent = address.sent /100000000
-  - var received = address.received / 100000000
-    img.qrcode.pull-right.d-none.d-sm-block(src='/qr/#{address.a_id}')
-  .col-xs-12.col-md-12
-    .card.card-default.card-address-summary
-      .card-header(style='position:relative;')        
+  - var balance = ((address.received - address.sent) / 100000000).toLocaleString('en',{'minimumFractionDigits':2,'maximumFractionDigits':8,'useGrouping':true});
+  - var balanceParts = balance.split('.');
+  - var sent = (address.sent /100000000).toLocaleString('en',{'minimumFractionDigits':2,'maximumFractionDigits':8,'useGrouping':true});
+  - var sentParts = sent.split('.');
+  - var received = (address.received / 100000000).toLocaleString('en',{'minimumFractionDigits':2,'maximumFractionDigits':8,'useGrouping':true});
+  - var receivedParts = received.split('.');
+  .col-xs-12.col-md-10.col-md-offset-1
+    .panel.panel-default.panel-address-summary
+      .panel-heading(style='position:relative;')     
         strong=address.a_id
         if settings.labels[address.a_id]
           if settings.labels[address.a_id].type  
@@ -53,25 +55,31 @@ block content
               if settings.labels[address.a_id].url
                 a(href='#{settings.labels[address.a_id].url}', target='_blank')
                   span.fa.fa-question-circle(style='margin-left:5px;')
-      table.table.table-bordered.table-striped.summary-table 
+      table.table.table-bordered.table-striped.summary-table
         thead
           tr
             if settings.show_sent_received == true
-              th=t('address.total_sent',{coin: settings.symbol})
+              th.hidden-xs #{settings.locale.total_sent} (#{settings.symbol})
             if address.a_id !== 'coinbase'
               if settings.show_sent_received == true
-                th=t('address.total_received',{coin: settings.symbol})
-              th=t('address.balance_coin',{coin:settings.symbol})
-        tbody             
+                th.hidden-xs #{settings.locale.total_received} (#{settings.symbol})
+              th #{settings.locale.rl_balance} (#{settings.symbol})
+              th #{settings.locale.a_qr}
+        tbody
           tr
-            if settings.show_sent_received == true 
-              td=sent.toFixed(settings.decimal_places)
+            if settings.show_sent_received == true
+              td.addr-summary.hidden-xs #{sentParts[0]}.
+                span.decimal #{sentParts[1]} 
             if address.a_id !== 'coinbase'
               if settings.show_sent_received == true
-                td=received.toFixed(settings.decimal_places)
-              td=balance.toFixed(settings.decimal_places)
-    .card.card-default.d-none.d-sm-block
-      .card-header
+                td.addr-summary.hidden-xs #{receivedParts[0]}.
+                  span.decimal #{receivedParts[1]} 
+              td.addr-summary #{balanceParts[0]}.
+                span.decimal #{balanceParts[1]} 
+              td.addr-summary
+                img.qrcode(src='/qr/'+address.a_id) 
+    .panel.panel-default
+      .panel-heading
         strong Claim this Address
       form#claimForm
         .form-group
@@ -88,4 +96,3 @@ block content
             input#signature.form-control(type='text' placeholder='Signature')
         button.btn.btn-primary(type='submit') Submit
     .footer-padding
-            

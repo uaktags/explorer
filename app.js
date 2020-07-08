@@ -13,7 +13,9 @@ var express = require('express')
   , i18nextMiddleware = require('i18next-express-middleware')
   , i18Backend = require('i18next-node-fs-backend')
   , request = require('request')
-  , fs = require('fs');
+  , fs = require('fs')
+  , package_metadata = require('./package.json')
+  , locale = require('./lib/locale');
 
 var app = express();
 
@@ -68,7 +70,7 @@ app.use(i18nextMiddleware.handle(i18next));
 app.use(favicon(path.join(__dirname, settings.favicon)));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -104,11 +106,60 @@ app.use('/ext/getaddress/:hash', function(req,res){
         sent: (address.sent / 100000000),
         received: (address.received / 100000000),
         balance: (address.balance / 100000000).toString().replace(/(^-+)/mg, ''),
-        last_txs: address.txs,
       };
       res.send(a_ext);
     } else {
       res.send({ error: 'address not found.', hash: req.params.hash})
+    }
+  });
+});
+
+app.use('/ext/gettx/:txid', function(req, res) {
+  var txid = req.params.txid;
+  db.get_tx(txid, function(tx) {
+    if (tx) {
+      lib.get_blockcount(function(blockcount) {
+        res.send({ active: 'tx', tx: tx, confirmations: settings.confirmations, blockcount: blockcount});
+      });
+    }
+    else {
+      lib.get_rawtransaction(txid, function(rtx) {
+        if (rtx.txid) {
+          lib.prepare_vin(rtx, function(vin) {
+            lib.prepare_vout(rtx.vout, rtx.txid, vin, function(rvout, rvin) {
+              lib.calculate_total(rvout, function(total){
+                if (!rtx.confirmations > 0) {
+                  var utx = {
+                    txid: rtx.txid,
+                    vin: rvin,
+                    vout: rvout,
+                    total: total.toFixed(8),
+                    timestamp: rtx.time,
+                    blockhash: '-',
+                    blockindex: -1,
+                  };
+                  res.send({ active: 'tx', tx: utx, confirmations: settings.confirmations, blockcount:-1});
+                } else {
+                  var utx = {
+                    txid: rtx.txid,
+                    vin: rvin,
+                    vout: rvout,
+                    total: total.toFixed(8),
+                    timestamp: rtx.time,
+                    blockhash: rtx.blockhash,
+                    blockindex: rtx.blockheight,
+                  };
+                  lib.get_blockcount(function(blockcount) {
+                    res.send({ active: 'tx', tx: utx, confirmations: settings.confirmations, blockcount: blockcount});
+                  });
+                }
+              });
+            });
+          });
+        } else {
+          res.send({ error: 'tx not found.', hash: txid});
+        }
+      });
     }
   });
 });
@@ -143,11 +194,19 @@ app.use('/ext/getdistribution', function(req,res){
   });
 });
 
-app.use('/ext/getlasttxsajax', function(req,res){
-  if(typeof req.query.length === 'undefined' || req.query.length > settings.index.last_txs){
+app.use('/ext/getlasttxsajax/:min', function(req,res){
+  if(typeof req.query.length === 'undefined' || isNaN(req.query.length) || req.query.length > settings.index.last_txs){
     req.query.length = settings.index.last_txs;
   }
-  db.get_last_txs_ajax(req.query.start, req.query.length,function(txs, count){
+  if(typeof req.query.start === 'undefined' || isNaN(req.query.start) || req.query.start < 0){
+    req.query.start = 0;
+  }
+  if(typeof req.params.min === 'undefined' || isNaN(req.params.min ) || req.params.min  < 0){
+    req.params.min  = 0;
+  } else {
+    req.params.min  = (req.params.min * 100000000);
+  }
+  db.get_last_txs_ajax(req.query.start, req.query.length, req.params.min,function(txs, count){
     var data = [];
     for(i=0; i<txs.length; i++){
       var row = [];
@@ -155,7 +214,7 @@ app.use('/ext/getlasttxsajax', function(req,res){
       row.push(txs[i].blockhash);
       row.push(txs[i].txid);
       row.push(txs[i].vout.length);
-      row.push((txs[i].total / 100000000).toFixed(settings.decimal_places));
+      row.push(txs[i].total);
       row.push(new Date((txs[i].timestamp) * 1000).toUTCString());
       data.push(row);
     }
@@ -163,99 +222,45 @@ app.use('/ext/getlasttxsajax', function(req,res){
   });
 });
 
-/*
-  pull request 270
-*/
-
-app.use('/ext/getaddresstxsajax', function(req,res){
-  if(typeof req.query.length === 'undefined' || req.query.length > settings.txcount){
-    req.query.length = settings.txcount;
-  }
-  db.get_address_txs_ajax(req.query.address, req.query.start, req.query.length,function(txs, count){
-      var data = [];
-      for(i=0; i<txs.length; i++){
-          if(typeof txs[i].txid !== "undefined") {
-              var out = 0
-              var vin = 0
-
-              txs[i].vout.forEach(function (r) {
-                  if (r.addresses == req.query.address) {
-                      out = r.amount;
-                  }
-              });
-
-              txs[i].vin.forEach(function (s) {
-                  if (s.addresses == req.query.address) {
-                      vin = s.amount
-                  }
-              });
-
-              var row = [];
-              row.push(new Date((txs[i].timestamp) * 1000).toUTCString());
-              row.push(txs[i].txid);
-              row.push(out);
-              row.push(vin);
-              data.push(row);
-          }
-      }
-
-      res.json({"data":data, "draw": req.query.draw, "recordsTotal": count, "recordsFiltered": count});
-  });
-});
-
-// End pull request 270
-
-app.use('/ext/getaddresstransactions/:hash', function(req,res){
-  db.get_address_ajax(req.params.hash,req.query.start, req.query.length,function(txs){
-    var data = [];
-    var length = (parseInt(req.query.length) + parseInt(req.query.start)); //facepalm
-    //facepalm for days. I'm sure there's a saying out there that just because you can, doesn't mean you should.
-    //works though.
-    var ntx = txs.txes.reverse();
-    for(i=req.query.start; i<length; i++){
-      var row = [];
-      var mtx = ntx[i];
-      row.push(lib.format_unixtime(mtx.timestamp));
-      row.push(mtx.txid);
-      var done = false;
-      var out = 0;
-      var vin = 0;
-      for(r = 0; r < mtx.vout.length; r++){
-        if(mtx.vout[r].addresses == req.params.hash)
-          out = mtx.vout[r].amount;
-      }
-      for(s = 0; s < mtx.vin.length; s++){
-        if(mtx.vin[s].addresses == req.params.hash)
-          out = mtx.vin[s].amount;
-      }
-      if (out > 0 && vin > 0){
-        var amount = (out - vin) / 100000000
-        if (amount < 0){
-          amount = amount * -1
-          console.log('here');
-          row.push("- "+amount.toFixed(settings.decimal_places));
-        }else if(amount > 0){
-          row.push( "+ "+ amount.toFixed(settings.decimal_places));
-        }else{
-          row.push(amount.toFixed(settings.decimal_places))
-        }
-      }else if(out > 0){
-        var amount = out / 100000000
-        row.push("+ " + amount.toFixed(settings.decimal_places))
-      }else{
-        var amount = vin / 100000000
-        row.push("- " +amount.toFixed(settings.decimal_places))
-      }
-      data.push(row);
+app.use('/ext/getaddresstxsajax/:address', function(req,res){
+    req.query.length = parseInt(req.query.length);
+    if(isNaN(req.query.length) || req.query.length > settings.txcount){
+        req.query.length = settings.txcount;
     }
-    res.json({"data":data, "draw": req.query.draw, "recordsTotal": txs.totalTxes, "recordsFiltered": txs.totalTxes});
-  });
-});
+    if(isNaN(req.query.start) || req.query.start < 0){
+        req.query.start = 0;
+    }
+    db.get_address_txs_ajax(req.params.address, req.query.start, req.query.length,function(txs, count){
+        var data = [];
+        for(i=0; i<txs.length; i++){
+            if(typeof txs[i].txid !== "undefined") {
+                var out = 0
+                var vin = 0
 
-app.use('/ext/getlasttxs/:min', function(req,res){
-  db.get_last_txs(settings.index.last_txs, (req.params.min * 100000000), function(txs){
-    res.send({data: txs});
-  });
+                txs[i].vout.forEach(function (r) {
+                    if (r.addresses == req.params.address) {
+                        out += r.amount;
+                    }
+                });
+
+                txs[i].vin.forEach(function (s) {
+                    if (s.addresses == req.params.address) {
+                        vin += s.amount
+                    }
+                });
+
+                var row = [];
+                row.push(new Date((txs[i].timestamp) * 1000).toUTCString());
+                row.push(txs[i].txid);
+                row.push(out);
+                row.push(vin);
+                row.push(txs[i].balance);
+                data.push(row);
+            }
+        }
+
+        res.json({"data":data, "draw": req.query.draw, "recordsTotal": count, "recordsFiltered": count});
+    });
 });
 
 app.post('/address/:hash/claim', function(req, res){
@@ -294,15 +299,23 @@ app.use('/ext/getmasternodes', function(req, res) {
 
 // locals
 app.set('title', settings.title);
+app.set('iquidus_version', package_metadata.version);
 app.set('symbol', settings.symbol);
 app.set('coin', settings.coin);
 //app.set('locale', locale);
 app.set('display', settings.display);
 app.set('markets', settings.markets);
+app.set('twitter', settings.twitter);
+app.set('facebook', settings.facebook); 
+app.set('googleplus', settings.googleplus);
+app.set('youtube', settings.youtube);
 app.set('genesis_block', settings.genesis_block);
 app.set('index', settings.index);
+app.set('use_rpc', settings.use_rpc);
 app.set('heavy', settings.heavy);
+app.set('lock_during_index', settings.lock_during_index);
 app.set('txcount', settings.txcount);
+app.set('txcount_per_page', settings.txcount_per_page);
 app.set('nethash', settings.nethash);
 app.set('nethash_units', settings.nethash_units);
 app.set('show_sent_received', settings.show_sent_received);
