@@ -200,6 +200,8 @@ mongoose.connect(dbString, {
     console.log('Aborting');
     exit();
   } else {
+    var peers = Array();
+    var cnt = 0;
     request({
       uri: 'http://127.0.0.1:' + settings.port + '/api/getpeerinfo',
       json: true
@@ -208,73 +210,29 @@ mongoose.connect(dbString, {
         var i = loop.iteration();
         var address = body[i].addr.split(':')[0];
         var port = body[i].addr.split(':')[1];
-        db.find_peer(address, function(peer) {
-          if (peer) {
-            if (isNaN(peer['port']) || peer['port'].length < 2 || peer['country'].length < 1) {
-              db.drop_peers(function() {
-                console.log('Saved peers missing ports or country, dropping peers. Re-reun this script afterwards.');
-                exit();
-              });
-            }
-            // peer already exists
-            loop.next();
-          } else {
-            request({
-              uri: 'https://freegeoip.app/json/' + address,
-              json: true
-            }, function(error, response, geo) {
-              db.create_peer({
-                address: address,
-                port: port,
-                protocol: body[i].version,
-                version: body[i].subver.replace('/', '').replace('/', ''),
-                country: geo.country_name
-              }, function() {
-                loop.next();
-              });
-            });
+        request({uri: 'https://freegeoip.app/json/' + address, json: true}, function (error, response, geo) {
+          if (address.startsWith('10.') || address.startsWith('192.168') || address.startsWith('172.16')) {
+            geo.country_name = '[private address]';
           }
-          //end
-          var version = body[i].subver.replace('/', '').replace('/', '');
-          var semver = version.split(":")[1];
-          livepeers[i] = address;
-          db.find_peers(address, function(peer) {
-            if (peer.length) {
-              for (i = 0; i < peer.length; i++) {
-                // cmp(a,b)
-                // result 1 = a is greater than b
-                // result 0 = a is the same as b
-                // result -1 = a is less than b
-                if (cmp(peer[i].version.split(":")[1], semver) == -1) {
-                  if (settings.peers.purge_on_run != true) {
-                    db.delete_peer({
-                      _id: peer[i]._id
-                    });
-                  }
-                  create_peers(address, body[i].version, version);
-                  console.log('Delete the db version:', peer[i].version.split(":")[1]); //remove
-                } else if (cmp(peer[i].version.split(":")[1], semver) == 0) {
-                  console.log('Do nothing, they\'re the same');
-                } else {
-                  //db.delete_peer({_id:peer[i]._id});
-                  console.log('This should never occur, Live Version:', semver, " Is less than:", peer[i].version.split(":")[1]); //remove
-                }
-              }
+          peers[cnt++] = {
+            address: address,
+            port: port,
+            protocol: body[i].version,
+            version: body[i].subver.replace('/', '').replace('/', ''),
+            country: geo.country_name
+          };
+          loop.next();
+        });
+      }, function() {
+         // insert all at once after creation
+         db.drop_peers(function() {
+          console.log('Dropped, rebuilding...');
+          lib.syncLoop(cnt, function (loop) {
+            var i = loop.iteration();
+            db.create_peer(peers[i], function() {
               loop.next();
-            } else {
-              create_peers(address, body[i].version, version);
-              loop.next();
-            }
-          });
-        }, function() {
-          db.get_peers(function(peers) {
-            for (var i = 0; i < peers.length; i++) {
-              if (!livepeers.includes(peers[i].address)) {
-                db.delete_peer({
-                  address: peers[i].address
-                });
-              }
-            }
+            });
+          }, function() {
             exit();
           });
         });

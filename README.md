@@ -28,6 +28,7 @@ Plenty of code was inspired or pulled from various sources in the community incl
 *  [Sugarchain Explorer](https://1explorer.sugarchain.org/)
 *  [Florincoin](https://florincoin.info/info)
 *  [Maxcoin Explorer 1](https://explorer.maxcoinproject.net/)
+*  [Litecoin Plus Explorer 1](http://explorer.litecoinplus.co/)
 
 
 *Note: If you would like your instance mentioned here contact me*
