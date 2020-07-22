@@ -9,9 +9,6 @@ var express = require('express')
   , routes = require('./routes/index')
   , lib = require('./lib/explorer')
   , db = require('./lib/database')
-  , i18next = require('i18next')
-  , i18nextMiddleware = require('i18next-express-middleware')
-  , i18Backend = require('i18next-node-fs-backend')
   , request = require('request')
   , fs = require('fs')
   , package_metadata = require('./package.json')
@@ -36,36 +33,11 @@ var commands = [];
     }
   bitcoinapi.setAccess('only', commands);
 // Language setup
-i18next
-  .use(i18Backend)
-  .use(i18nextMiddleware.LanguageDetector)
-  .init({
-    interpolation: {
-      format: function(value, format, lng) {
-          if (format === 'uppercase') return value.toUpperCase();
-          if(value instanceof Date) return moment(value).format(format);
-          return value;
-        }
-    },
-    backend: {
-      loadPath: __dirname + '/locale/{{lng}}/{{ns}}.json',
-      addPath: __dirname + '/locale/{{lng}}/{{ns}}.missing.json'
-    },
-    detection: {
-      order: ['querystring', 'cookie'],
-      caches: ['cookie']
-    },
-   
-    fallbackLng: settings.language_fallback,
-    preload: [settings.language],
-    saveMissing: true,
-    debug: false
-});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(i18nextMiddleware.handle(i18next));
 
 app.use(favicon(path.join(__dirname, settings.favicon)));
 app.use(logger('dev'));
@@ -77,17 +49,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Add Languages to Local Variabels
 app.use(function (req, res, next) {
   res.locals.currentlang = req.language;
-
   next();
 })
 
-// Language Files for Datatable
-app.use('/datatable/lang', function(req,res){
-    i18next.changeLanguage(req.language, (err, t) => {
-      if (err) return console.log('something went wrong loading', err);
-      res.send(i18next.t("datatable", { returnObjects: true }));
-    });   
-});
+
 
 // routes
 app.use('/api', bitcoinapi.app);

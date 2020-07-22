@@ -1,16 +1,16 @@
 {
   "name": "explorer",
-  "version": "1.7.3.1",
+  "version": "1.7.4",
   "private": true,
   "scripts": {
-    "start": "node --stack-size=10000 ./bin/cluster",
+    "start": "node --stack-size=10000 ./bin/app",
     "stop": "kill -2 $(cat tmp/cluster.pid)",
     "test": "node ./node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
+    "async": "^3.1.0",
     "big-integer": "^1.6.43",
     "bignumber": "^1.1.0",
-    "async": "^3.1.0",
     "bitcoin-core": "^2.0.0",
     "bitcoin-node-api": "git+http://git@github.com/uaktags/Bitcoin-Node-Api.git",
     "body-parser": "^1.19.0",
@@ -19,10 +19,8 @@
     "express": "^4.17.1",
     "format-currency": "^1.0.0",
     "format-num": "^1.0.0",
+    "i18n": "^0.10.0",
     "intl": "^1.2.5",
-    "i18next": "^15.1.2",
-    "i18next-express-middleware": "^1.8.0",
-    "i18next-node-fs-backend": "^1.2.1",
     "jsonminify": "^0.4.1",
     "log4js": "^4.3.1",
     "markdown-js": "0.0.4",
@@ -34,20 +32,5 @@
     "request": "^2.88.0",
     "semver-compare": "^1.0.0",
     "serve-favicon": "^2.5.0"
-  },
-  "devDependencies": {
-    "jasmine": "~3.5.0",
-    "debug": "^4.1.1",
-    "express": "~4.17.1",
-    "intl": "^1.2.5",
-    "jsonminify": "0.2.3",
-    "jstransformer-markdown-it": "^2.1.0",
-    "mongodb": "^3.4.1",
-    "mongoose": "5.7.7",
-    "morgan": "~1.9.1",
-    "pug": "^2.0.3",
-    "qr-image": "~2.0.0",
-    "request": "^2.88.0",
-    "static-favicon": "~1.0.0"
   }
 }
