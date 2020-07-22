@@ -54,12 +54,10 @@ block content
             }
             return json.data;
           }
-        },
-        columns: [
-          { data: 'timestamp', width: '25%' },
-          { data: 'txid', width: '60%' },
-          { data: 'total', width: '15%' },
-        ]
+          $("td:eq(0)", row).html(timestamp);
+          $("td:eq(1)", row).html('<a href="/tx/' + txhash + '">' + txhash + '</a>');
+          $("td:eq(2)", row).html(total);
+        }
       });
       setInterval( function () {
         rtable.api().ajax.reload(null, false);
@@ -68,12 +66,12 @@ block content
   .col-md-12(style="margin-bottom: 4%")
     .card.card-default
       .card-header
-        strong=t('movement.latest')
+        strong="Latest Movement"
       table#movement-table.table.table-bordered.table-striped
         thead
           tr
-            th=t('movement.timestamp')
-            th=t('movement.txid')
-            th=t('movement.amount_coin', {coin: settings.symbol})
+            th timestamp
+            th.hidden-xs txid
+            th amount
         tbody.text-center
     .footer-padding

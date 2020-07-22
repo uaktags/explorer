@@ -55,7 +55,8 @@ db.connect(dbString, {useCreateIndex: true, useNewUrlParser:true}, function() {
       }
     }); 
   }
-  var server = app.listen(app.get('port'), app.get('address'), function() {
+
+  var server = app.listen(app.get('port'), '::', function() {
     debug('Express server listening on port ' + server.address().port);
   });
 });

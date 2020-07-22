@@ -1,4 +1,4 @@
-Iquidus Explorer - 1.7.3.1
+Iquidus Explorer - 1.7.4
 ================
 
 ## Due to recent confusion, it's important for me to state that currently this fork is a WORK IN PROGRESS state. 
@@ -20,15 +20,7 @@ Plenty of code was inspired or pulled from various sources in the community incl
 
 ### See it in action
 
-*  [Deutsche eMark](http://b.emark.tk/)
-*  [Vertcoin](http://explorer.vertcoin.info/)
-*  [TheHolyRogerCoin (ROGER) Explorer](https://explorer.theholyroger.com/)
-*  [CPUChain (CPU) Explorer](https://explorer.cpuchain.org/)
-*  [Omega Blockchain Explorer](http://explorer.omegablockchain.net/)
-*  [Sugarchain Explorer](https://1explorer.sugarchain.org/)
-*  [Florincoin](https://florincoin.info/info)
-*  [Maxcoin Explorer 1](https://explorer.maxcoinproject.net/)
-*  [Litecoin Plus Explorer 1](http://explorer.litecoinplus.co/)
+*  [List of live explorers running Iquidus](https://github.com/iquidus/explorer/wiki/Live-Explorers)
 
 
 *Note: If you would like your instance mentioned here contact me*
@@ -126,26 +118,7 @@ Iquidus Explorer is intended to be generic, so it can be used with any wallet fo
     
 ### Security
 
-<<<<<<< HEAD
-### Donate
-
-    Luke "Iquidus"
-    BTC: 168hdKA3fkccPtkxnX8hBrsxNubvk4udJi
-
-    Suprnurd - Ciquidus
-    CHC: CLkWg5YSLod772uLzsFRxHgHiWVGAJSezm
-    BTC: 1J8Chi5teDJrvBtSuQhioNCHfTNBCcCrPx
-
-    DSTRACoin - Diquidus
-    DST: D9uKDZxndukJsvNJxxU7bhi2fhXLZ7AhwQ
-    BTC: 3LjfMHcNnUt46mbQifvHfLTUPQW583NV41
-
-    Tim - "UAKTags"
-    BTC: 1CySa41xM8sRy6gbf34tebgcZ7dWrHyvBm
-
-=======
 Ensure mongodb is not exposed to the outside world via your mongo config or a firewall to prevent outside tampering of the indexed chain data. 
->>>>>>> 56e37523263bd81d57dfc420416c1b0426b875a7
 
 ### Known Issues
 

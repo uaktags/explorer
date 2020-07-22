@@ -18,23 +18,27 @@ var app = express();
 
 // bitcoinapi
 bitcoinapi.setWalletDetails(settings.wallet);
-var commands = [];
-    for(i=0; i < settings.commands_needed.length; i++){
-      var cmds = JSON.parse(fs.readFileSync("coin_commands/"+settings.commands_needed[i]));
-      if(settings.heavy){
-        for(k=0; k < cmds.heavy.length; k++){
-          commands.push(cmds.heavy[k]);
-        }
-      }
-      for(k=0; k < cmds.default.length; k++){
-        commands.push(cmds.default[k]);
-      }
-
-    }
-  bitcoinapi.setAccess('only', commands);
-// Language setup
-
-
+if (settings.heavy != true) {
+  bitcoinapi.setAccess('only', ['getinfo', 'getnetworkhashps', 'getmininginfo', 'getdifficulty', 'getconnectioncount',
+    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getpeerinfo', 'gettxoutsetinfo', 'verifymessage']);
+} else {
+  // enable additional heavy api calls
+  /*
+    getvote - Returns the current block reward vote setting.
+    getmaxvote - Returns the maximum allowed vote for the current phase of voting.
+    getphase - Returns the current voting phase ('Mint', 'Limit' or 'Sustain').
+    getreward - Returns the current block reward, which has been decided democratically in the previous round of block reward voting.
+    getnextrewardestimate - Returns an estimate for the next block reward based on the current state of decentralized voting.
+    getnextrewardwhenstr - Returns string describing how long until the votes are tallied and the next block reward is computed.
+    getnextrewardwhensec - Same as above, but returns integer seconds.
+    getsupply - Returns the current money supply.
+    getmaxmoney - Returns the maximum possible money supply.
+  */
+  bitcoinapi.setAccess('only', ['getinfo', 'getstakinginfo', 'getnetworkhashps', 'getdifficulty', 'getconnectioncount',
+    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getmaxmoney', 'getvote',
+    'getmaxvote', 'getphase', 'getreward', 'getnextrewardestimate', 'getnextrewardwhenstr',
+    'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo', 'verifymessage']);
+}
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -285,6 +289,7 @@ app.set('nethash', settings.nethash);
 app.set('nethash_units', settings.nethash_units);
 app.set('show_sent_received', settings.show_sent_received);
 app.set('logo', settings.logo);
+app.set('headerlogo', settings.headerlogo);
 app.set('theme', settings.theme);
 app.set('labels', settings.labels);
 app.set('decimal_places', settings.decimal_places);

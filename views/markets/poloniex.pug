@@ -46,35 +46,35 @@ block market_view
     .d-none.col-md-12  
       #chart-card.card.card-default
         .card-header
-          strong= t('market.market_title',{market : t('exchange.graviex'),coin :  marketdata.coin, exchange : marketdata.exchange })
+          strong #{settings.locale.poloniex} - #{marketdata.coin}/#{marketdata.exchange} - #{settings.locale.mkt_hours}
           a(href='#')
-            span.fa.fa-th-list.pull-right.view-summary.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title=settings.locale.mkt_view_summary) 
-        .panel-body
+            span.fa.fa-th-list.pull-right.view-summary.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom',  title=settings.locale.mkt_view_summary) 
+        .card-body
           div#chart(style="width:100%;height:300px;")
       #summary-card.card.card-default
         .card-header
-          strong= t('market.market_title',{market : t('exchange.graviex'),coin :  marketdata.coin, exchange : marketdata.exchange })
+          strong #{settings.locale.poloniex} - #{marketdata.coin}/#{marketdata.exchange} - #{settings.locale.mkt_hours}
           a(href='#')
-            span.fa.fa-line-chart.pull-right.view-chart.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title=settings.locale.mkt_view_chart) 
+            span.fa.fa-line-chart.pull-right.view-chart.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom',  title=settings.locale.mkt_view_chart) 
         table.table.table-bordered.summary-table 
           thead
             tr
-              th= t('market.high')
-              th= t('market.low')
-              th= t('market.volume')
-              th.d-none= t('market.top_bid')
-              th.d-none= t('market.top_ask')
-              th.d-none= t('market.yeserday')
-              th.d-none= t('market.last_price')
-              th= t('market.change')
+              th #{settings.locale.mkt_high}
+              th #{settings.locale.mkt_low}
+              th #{settings.locale.mkt_volume}
+              th.d-none.d-sm-block #{settings.locale.mkt_top_bid}
+              th.d-none.d-sm-block #{settings.locale.mkt_top_ask}
+              th.d-none.d-sm-block #{settings.locale.mkt_yesterday}
+              th.d-none.d-sm-block #{settings.locale.mkt_last}
+              th #{settings.locale.mkt_change}
           tbody
             tr
               td #{marketdata.data.summary['high24hr']}
               td #{marketdata.data.summary['low24hr']}
               td #{marketdata.data.summary['baseVolume']}
-              td.d-none #{marketdata.data.summary.highestBid}
-              td.d-none #{marketdata.data.summary.lowestAsk}
-              td.d-none #{marketdata.data.summary.last}
+              td.d-none.d-sm-block #{marketdata.data.summary.highestBid}
+              td.d-none.d-sm-block #{marketdata.data.summary.lowestAsk}
+              td.d-none.d-sm-block #{marketdata.data.summary.last}
               if marketdata.data.summary.percentChange.substring(0, 1) == '-'
                 td.danger #{marketdata.data.summary.percentChange} %
               else
@@ -82,9 +82,9 @@ block market_view
     .d-md-none.d-lg-none.col-xs-12
       .card.card-default
         .card-header
-          strong= t('market.market_title',{market : t('exchange.graviex'),coin :  marketdata.coin, exchange : marketdata.exchange })
+          strong Poloniex - #{marketdata.coin}/#{marketdata.exchange} - #{settings.locale.mkt_hours}
           a(href='#')
-            span.fa.fa-line-chart.pull-right.view-chart-disabled.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title= t('market.no_chart')) 
+            span.fa.fa-line-chart.pull-right.view-chart-disabled.iquidus.market-toggle(data-toggle='tooltip', data-placement='bottom', title=settings.locale.mkt_no_chart) 
         table.table.table-bordered.summary-table 
           thead
             tr
@@ -105,13 +105,13 @@ block market_view
     .col-md-6.col-xs-12
       .card.card-default
         .card-header
-          h3.card-title= t('market.buy_orders')
+          h3.card-title #{settings.locale.mkt_buy_orders}
         table.table.table-striped.table-bordered.order-table
           thead
             tr
-              th= t('market.price_coin',{coin : marketdata.exchange })
-              th= t('market.total_coin',{coin : marketdata.coin })
-              th.d-none= t('market.amount_coin',{coin : marketdata.exchange})
+              th #{settings.locale.mkt_price} (#{marketdata.exchange})
+              th #{settings.locale.mkt_amount} (#{marketdata.coin})
+              th.d-none.d-sm-block #{settings.locale.mkt_total} (#{marketdata.exchange})
           tbody
             each buy in marketdata.data.buys
               tr
@@ -119,18 +119,18 @@ block market_view
                   =parseFloat(buy.price).toFixed(8)
                 td
                   =parseFloat(buy.amount).toFixed(8)
-                td.d-none
+                td.d-none.d-sm-block
                   =parseFloat(buy.total).toFixed(8)
     .col-md-6.col-xs-12
       .card.card-default
         .card-header
-          h3.card-title= t('market.sell_orders')
+          h3.card-title #{settings.locale.mkt_sell_orders}
         table.table.table-striped.table-bordered.order-table
           thead
             tr
-              th= t('market.price_coin',{coin : marketdata.exchange })
-              th= t('market.total_coin',{coin : marketdata.coin })
-              th.d-none= t('market.amount_coin',{coin : marketdata.exchange})
+              th #{settings.locale.mkt_price} (#{marketdata.exchange})
+              th #{settings.locale.mkt_amount} (#{marketdata.coin})
+              th.d-none.d-sm-block #{settings.locale.mkt_total} (#{marketdata.exchange})
           tbody
             each sell in marketdata.data.sells
               tr
@@ -138,43 +138,43 @@ block market_view
                   =parseFloat(sell.price).toFixed(8)
                 td
                   =parseFloat(sell.amount).toFixed(8)
-                td.d-none
+                td.d-none.d-sm-block
                   =parseFloat(sell.total).toFixed(8)
   .row   
     .col-md-12
       .card.card-default
         .card-header
-          h3.card-title= t('market.trade_history')
+          h3.card-title #{settings.locale.mkt_trade_history}
         table.table.table-hover.history-table.table-bordered(cellspacing="0")
           thead
             tr
-              th.d-none= t('market.order_type')
-              th= t('market.total_coin',{coin : marketdata.coin })
-              th= t('market.price_coin',{coin : marketdata.exchange })
-              th= t('market.amount_coin',{coin : marketdata.exchange})
-              th= t('market.timestamp')
+              th.d-none.d-sm-block #{settings.locale.mkt_type}
+              th #{settings.locale.mkt_amount} (#{marketdata.coin})
+              th #{settings.locale.mkt_price} (#{marketdata.exchange})
+              th #{settings.locale.mkt_total} (#{marketdata.exchange})
+              th #{settings.locale.mkt_time_stamp}
           tbody
             each trade in marketdata.data.history
               if trade.type == 'buy'
                 tr.success
-                  td.d-none BUY
+                  td.d-none.d-sm-blockBUY
                   td
                     =trade.amount
                   td
                     =trade.rate
-                  td.d-none
+                  td.d-none.d-sm-block
                     =trade.total
-                  td.d-none
+                  td.d-none.d-sm-block
                     =trade.date
               else
                 tr.danger 
-                  td.d-none SELL
+                  td.d-none.d-sm-blockSELL
                   td
                     =trade.amount
                   td
                     =trade.rate
-                  td.d-none
+                  td.d-none.d-sm-block
                     =trade.total
-                  td.d-none
+                  td.d-none.d-sm-block
                     =trade.date
       .footer-padding

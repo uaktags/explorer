@@ -1,59 +1,18 @@
 extends layout
 
 block content
-  if GeoInfo
-    script. 
-      var dtbleCols = [
-        { data: 'address', width:  '25%'},
-        { data: 'protocol', width: '25%'},
-        { data: 'version', width: '25%'},
-        { data: 'country', width: '25%'}
-      ] 
-  else
-    script. 
-      var dtbleCols = [
-        { data: 'address', width:  '33%'},
-        { data: 'protocol', width: '33%'},
-        { data: 'version', width: '33%'}
-      ]   
-  script.
-    $(document).ready(function(){
-      var ctable = $('#connections-table').dataTable( {  
-        autoWidth: true,      
-        searching: false,
-        ordering: false,
-        responsive: true,
-        lengthChange: true,
-        processing: true,
-        ajax: {
-          url: '/ext/connections',
-          dataSrc: function ( json ) {
-            /*for ( var i=0;i<json.data.length; i++ ) {
-              json.data[i]['timestamp'] = new Date((json.data[i]['timestamp']) * 1000).toUTCString();
-              json.data[i]['txid'] = "<a href='/tx/" + json.data[i]['txid'] + "'>" + json.data[i]['txid'] + "</a>";
-              json.data[i]['blockindex'] = "<a href='/block/" + json.data[i]['blockhash'] + "'>" + json.data[i]['blockindex'] + "</a>";
-              var amount = json.data[i]['total'] / 100000000;
-              json.data[i]['total'] = amount.toFixed(settings.decimal_places);
-              json.data[i]['recipients'] = json.data[i]['vout'].length;
-            }*/
-            return json.data;
-          }
-        },
-        columns: dtbleCols
-      });
-    });
-  .col-md-10.offset-md-1(style="margin-bottom: 4%")
+  .col-md-12(style="margin-bottom: 4%")
     .row.text-center(style='margin-bottom:15px;')
-      i=t('network.info')
+      i #{settings.locale.net_warning}
     .card.card-default
       .card-header
-        strong=t('network.latest')
-      table#connections-table.table.table-bordered.table-striped
-        thead
-          tr
-            th.text-center=t('network.address')
-            th.text-center=t('network.protocol')
-            th.text-center=t('network.sub_version')
-            if GeoInfo
-              th.text-center=t('network.country')
-        tbody.text-center
+        ul.nav.nav-tabs(role='tablist')
+          li.nav-item.active(role='presentation')
+            a.nav-link.show.active(href='#connections', aria-controls='connections', role='tab', data-toggle='tab') #{settings.locale.net_connections}
+          li.nav-item(role='presentation')
+            a.nav-link(href='#addnodes', aria-controls='addnodes', role='tab', data-toggle='tab') #{settings.locale.net_addnodes}
+    .tab-content
+      #connections.card.card-default.tab-pane.active 
+        include ./includes/net_list.pug
+      #addnodes.card.card-default.tab-pane
+        include ./includes/net_addnodes.pug
