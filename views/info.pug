@@ -7,52 +7,52 @@ block content
         strong #{t('api.api_title')}
       .card-body
         p
-          em #{t("api.api_info")}
+          em #{t('api.api_info')}
         hr
-        h3 #{t("api.api_calls")}
+        h3 #{t('api.api_calls')}
         p
-          em #{t("api.api_calls_info",{coin : settings.symbol })}
+          em #{t('api.api_calls_info',{coin : settings.symbol })}
         ul
           li
             p
-              strong t("api.api_getdifficulty")
+              strong #{t('api.api_getdifficulty')}
               br
-              em #{t("api.api_getdifficulty_info")y}
+              em #{t('api.api_getdifficulty_info')}
               br
               a(href='/api/getdifficulty') #{address}/api/getdifficulty
           li
             p
-              strong #{t("api.api_getconnectioncount")}
+              strong #{t('api.api_getconnectioncount')}
               br
-              em #{t("api.api_getconnectioncount_info")}
+              em #{t('api.api_getconnectioncount_info')}
               br
               a(href='/api/getconnectioncount') #{address}/api/getconnectioncount
           li
             p
-              strong #{t("api.api_getblockcount")}
+              strong #{t('api.api_getblockcount')}
               br
-              em #{t("api.api_getblockcount_info")}
+              em #{t('api.api_getblockcount_info')}
               br
               a(href='/api/getblockcount') #{address}/api/getblockcount   
           li
             p
-              strong #{t("api.api_getblockhash")}
+              strong #{t('api.api_getblockhash')}
               br
-              em #{t("api.api_getblockhash_info")}
+              em #{t('api.api_getblockhash_info')}
               br
               a(href='/api/getblockhash?index='+hashes.blockindex) #{address}/api/getblockhash?index=#{hashes.blockindex}
           li
             p
-              strong #{t("api.api_getblock")}
+              strong #{t('api.api_getblock')}
               br
-              em #{t("api.api_getblock_info")}
+              em #{t('api.api_getblock_info')}
               br
               a(href='/api/getblock?hash='+hashes.blockhash) #{address}/api/getblock?hash=#{hashes.blockhash}
           li
             p
-              strong #{t("api.api_getrawtransaction")}
+              strong #{t('api.api_getrawtransaction')}
               br
-              em #{t("api.api_getrawtransaction_info")}
+              em #{t('api.api_getrawtransaction_info')}
               br
               a(href='/api/getrawtransaction?txid='+hashes.txhash+'&decrypt=0') #{address}/api/getrawtransaction?txid=#{hashes.txhash}&decrypt=0
               br
@@ -61,84 +61,84 @@ block content
           if(settings.index.show_hashrate)
             li
               p
-                strong #{t("api.api_getnetworkhashps")}
+                strong #{t('api.api_getnetworkhashps')}
                 br
-                em #{t("api.api_getnetworkhashps_info")}
+                em #{t('api.api_getnetworkhashps_info')}
                 br
                 a(href='/api/getnetworkhashps') #{address}/api/getnetworkhashps
 
           if(settings.heavy)
             li
               p
-                strong #{t("api.api_getmaxmoney")}
+                strong #{t('api.api_getmaxmoney')}
                 br
-                em #{t("api.api_getmaxmoney_info")}
+                em #{t('api.api_getmaxmoney_info')}
                 br
                 a(href='/api/getmaxmoney') #{address}/api/getmaxmoney
             
             li
               p
-                strong #{t("api.api_getmaxvote")}
+                strong #{t('api.api_getmaxvote')}
                 br
-                em #{t("api.api_getmaxvote_info")}
+                em #{t('api.api_getmaxvote_info')}
                 br
                 a(href='/api/getmaxvote') #{address}/api/getmaxvote
 
             li
               p
-                strong #{t("api.api_getvote")}
+                strong #{t('api.api_getvote')}
                 br
-                em #{t("api.api_getvote_info")}
+                em #{t('api.api_getvote_info')}
                 br
                 a(href='/api/getvote') #{address}/api/getvote
 
             li
               p
-                strong #{t("api.api_getphase")}
+                strong #{t('api.api_getphase')}
                 br
-                em #{t("api.api_getphase_info")}
+                em #{t('api.api_getphase_info')}
                 br
                 a(href='/api/getphase') #{address}/api/getphase
 
             li
               p
-                strong #{t("api.api_getreward")}
+                strong #{t('api.api_getreward')}
                 br
-                em #{t("api.api_getreward_info")}
+                em #{t('api.api_getreward_info')}
                 br
                 a(href='/api/getreward') #{address}/api/getreward
 
             li
               p
-                strong #{t("api.api_getsupply")}
+                strong #{t('api.api_getsupply')}
                 br
-                em #{t("api.api_getsupply_info")}
+                em #{t('api.api_getsupply_info')}
                 br
                 a(href='/api/getsupply') #{address}/api/getsupply  
 
             li
               p
-                strong #{t("api.api_getnextrewardestimate")}
+                strong #{t('api.api_getnextrewardestimate')}
                 br
-                em #{t("api.api_getnextrewardestimate_info")}
+                em #{t('api.api_getnextrewardestimate_info')}
                 br
                 a(href='/api/getnextrewardestimate') #{address}/api/getnextrewardestimate
 
             li
               p
-                strong #{t("api.api_getnextrewardwhenstr"}
+                strong #{t('api.api_getnextrewardwhenstr')}
                 br
-                em #{t("api.api_getnextrewardwhenstr_info")}
+                em #{t('api.api_getnextrewardwhenstr_info')}
                 br
                 a(href='/api/getnextrewardwhenstr') #{address}/api/getnextrewardwhenstr                                              
         hr
-        h3 #{t("api.api_calls_ext")}
+        h3 #{t('api.api_calls_ext')}
         p
-          em #{t("api.api_calls_ext_info")}
+          em #{t('api.api_calls_ext_info')}
         ul
           li
             p
-              strong #{t("api.api_getmoneysupply")}
+              strong #{t('api.api_getmoneysupply')}
               br
               em Returns current money supply
               br
@@ -146,7 +146,7 @@ block content
 
           li
             p
-              strong #{t("api.api_getdistribution")}
+              strong #{t('api.api_getdistribution')}
               br
               em Returns wealth distribution stats
               br
@@ -154,7 +154,7 @@ block content
 
           li
             p
-              strong #{t("api.api_getaddress")}
+              strong #{t('api.api_getaddress')}
               br
               em Returns information for given address
               br
@@ -170,7 +170,7 @@ block content
 
           li
             p
-              strong #{t("api.api_getbalance")}
+              strong #{t('api.api_getbalance')}
               br
               em Returns current balance of given address
               br
@@ -178,7 +178,7 @@ block content
 
           li
             p
-              strong #{t("api.api_getlasttxs")}
+              strong #{t('api.api_getlasttxs')}
               br
               em Returns last transactions greater than [min]
               br
@@ -196,9 +196,9 @@ block content
                 a(href='/ext/getmasternodes') #{address}/ext/getmasternodes
 
         hr
-        h3 #{t("api.api_calls_get")}
+        h3 #{t('api.api_calls_get')}
         p
-          em #{t("api.api_calls_get_info")}
+          em #{t('api.api_calls_get_info')}
         ul
           li
               p
