@@ -3,14 +3,15 @@ extends layout
 block content
   .col-md-12(style="margin-bottom: 4%")
     .row.text-center(style='margin-bottom:15px;')
-      i #{settings.locale.net_warning}
+      i #{t('network.info')}
     .card.card-default
       .card-header
+        strong #{t('network.latest')}
         ul.nav.nav-tabs(role='tablist')
           li.nav-item.active(role='presentation')
-            a.nav-link.show.active(href='#connections', aria-controls='connections', role='tab', data-toggle='tab') #{settings.locale.net_connections}
+            a.nav-link.show.active(href='#connections', aria-controls='connections', role='tab', data-toggle='tab') #{t('network.latest')}
           li.nav-item(role='presentation')
-            a.nav-link(href='#addnodes', aria-controls='addnodes', role='tab', data-toggle='tab') #{settings.locale.net_addnodes}
+            a.nav-link(href='#addnodes', aria-controls='addnodes', role='tab', data-toggle='tab') #{t('network.addnodes')}
     .tab-content
       #connections.card.card-default.tab-pane.active 
         include ./includes/net_list.pug

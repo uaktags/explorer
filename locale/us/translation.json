@@ -114,6 +114,7 @@
     "status": "Status"
   },
   "network": {
+    "addnodes": "Add Nodes",
     "info": "This is a sub sample of the network based on wallets that were connected to this node in the last 24hours.",
     "latest": "Connections",
     "address": "Address",
@@ -133,7 +134,8 @@
     "key": "Key",
     "vote": "Vote",
     "current_reward": "Current reward",
-    "last_n_votes": "Last {{votes}} votes"
+    "last_n_votes": "Last {{votes}} votes",
+    "cap": "Coin Cap ({coin, uppercase})"
   },
   "api": {
     "api_title": "API documentation",

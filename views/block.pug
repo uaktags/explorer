@@ -9,27 +9,27 @@ block content
         .row           
           if block.previousblockhash != null
             a(href='/block/'+ block.previousblockhash)
-              span.fa.fa-chevron-left.iquidus.block-last(data-toggle='tooltip', data-placement='top', title=settings.locale.block_previous)  
+              span.fa.fa-chevron-left.iquidus.block-last(data-toggle='tooltip', data-placement='top', title=t('block.block_previous'))  
             strong.d-none.d-sm-block #{settings.symbol} block: #{block.hash}
           else
-            strong.d-none.d-sm-block(style='margin-left:10px;') #{settings.symbol} #{settings.locale.ex_block}: #{block.hash}
+            strong.d-none.d-sm-block(style='margin-left:10px;') #{settings.symbol} #{t('explorer.block')}: #{block.hash}
           if block.nextblockhash != null 
             a(href='/block/'+ block.nextblockhash)
-              span.fa.fa-chevron-right.iquidus.pull-right.block-next(data-toggle='tooltip', data-placement='top', title=settings.locale.block_next)      
+              span.fa.fa-chevron-right.iquidus.pull-right.block-next(data-toggle='tooltip', data-placement='top', title=t('block.block_next'))      
           a(href=`/api/getblock?hash=` + block.hash)
             span.fa.fa-info-circle.iquidus.pull-right
       table.table.table-bordered.summary-table 
         thead
           tr
-            th #{settings.locale.height}
-            th #{settings.locale.difficulty}
-            th #{settings.locale.confirmations}
+            th=t('block.height')
+            th=t('block.difficulty')
+            th=t('block.confirmations')
             if settings.heavy == true
               th Vote
-            th.d-none.d-sm-table-cell.d-table-cell #{settings.locale.size} (kB)
-            th.d-none.d-sm-table-cell.d-table-cell #{settings.locale.bits}
-            th.d-none.d-sm-table-cell.d-table-cell #{settings.locale.nonce}
-            th.d-none.d-sm-table-cell.d-table-cell #{settings.locale.timestamp}
+            th.d-none.d-sm-table-cell.d-table-cell #{t('block.size_kb')}
+            th.d-none.d-sm-table-cell.d-table-cell #{t('block.bits')}
+            th.d-none.d-sm-table-cell.d-table-cell #{t('block.nonce')}
+            th.d-none.d-sm-table-cell.d-table-cell #{t('explorer.timestamp')}
         tbody
           if block.confirmations >= confirmations                
             tr.table-success
@@ -71,17 +71,17 @@ block content
 
     if block.hash == settings.genesis_block
       .alert.alert-info(role='alert', style='text-align:center;')   
-        strong #{settings.locale.block_genesis}
+        strong #{t('block.block_genesis')}
     else
       .card.card-default
         .card-header
-          strong #{settings.locale.ex_latest_transactions}
+          strong #{t('explorer.latest_transactions')}
         table.table.table-bordered.table-striped.summary-table 
           thead
             tr
-              th.d-none.d-sm-table-cell #{settings.locale.tx_hash}
-              th #{settings.locale.tx_recipients}
-              th #{settings.locale.mkt_amount} (#{settings.symbol})
+              th.d-none.d-sm-table-cell #{t('explorer.hash')}
+              th #{t('tx.recipients_address')}
+              th #{t('address.amount_coin', {coin: settings.symbol})}
               th
           tbody
             each txn in txs

@@ -35,12 +35,12 @@ block content
         thead
           tr
             if settings.show_sent_received == true
-              th.d-none.d-sm-block #{settings.locale.total_sent} (#{settings.symbol})
-            if address.a_id !== 'coinbase'
-              if settings.show_sent_received == true
-                th #{settings.locale.total_received} (#{settings.symbol})
-              th #{settings.locale.rl_balance} (#{settings.symbol})
-              th #{settings.locale.a_qr}
+              th.d-none.d-sm-block #{t('address.total_sent',{coin: settings.symbol})}
+              if address.a_id !== 'coinbase'
+                if settings.show_sent_received == true
+                  th #{t('address.total_sent',{coin: settings.symbol})}
+                th #{t('address.balance_coin',{coin:settings.symbol})}
+                th #{t('address.qr')}
         tbody
           tr
             if settings.show_sent_received == true
@@ -56,7 +56,7 @@ block content
                 img.qrcode(src='/qr/'+address.a_id) 
     .card.card-default.d-none.d-sm-block
       .card-header
-        strong #{settings.locale.ex_latest_transactions}
+        strong #{t('address.latest_transactions')}
       table.table-bordered.table-striped
         include ./includes/address_history.pug
     .footer-padding

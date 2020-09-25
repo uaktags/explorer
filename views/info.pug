@@ -4,142 +4,141 @@ block content
   .col-md-12(style="margin-bottom: 4%")
     .card.card-default
       .card-header
-        strong #{settings.locale.api_title}
+        strong #{t('api.api_title')}
       .card-body
         p
-          em #{settings.locale.api_message}
+          em #{t("api.api_info")}
         hr
-        h3 #{settings.locale.api_calls}
+        h3 #{t("api.api_calls")}
         p
-          em Return data from coind
+          em #{t("api.api_calls_info",{coin : settings.symbol })}
         ul
           li
             p
-              strong getdifficulty
+              strong t("api.api_getdifficulty")
               br
-              em #{settings.locale.api_getdifficulty}
+              em #{t("api.api_getdifficulty_info")y}
               br
               a(href='/api/getdifficulty') #{address}/api/getdifficulty
           li
             p
-              strong getconnectioncount
+              strong #{t("api.api_getconnectioncount")}
               br
-              em #{settings.locale.api_getconnectioncount}
+              em #{t("api.api_getconnectioncount_info")}
               br
               a(href='/api/getconnectioncount') #{address}/api/getconnectioncount
           li
             p
-              strong getblockcount
+              strong #{t("api.api_getblockcount")}
               br
-              em #{settings.locale.api_getblockcount}
+              em #{t("api.api_getblockcount_info")}
               br
               a(href='/api/getblockcount') #{address}/api/getblockcount   
           li
             p
-              strong getblockhash [index]
+              strong #{t("api.api_getblockhash")}
               br
-              em #{settings.locale.api_getblockhash}
+              em #{t("api.api_getblockhash_info")}
               br
               a(href='/api/getblockhash?index='+hashes.blockindex) #{address}/api/getblockhash?index=#{hashes.blockindex}
           li
             p
-              strong getblock [hash]
+              strong #{t("api.api_getblock")}
               br
-              em #{settings.locale.api_getblock}
+              em #{t("api.api_getblock_info")}
               br
               a(href='/api/getblock?hash='+hashes.blockhash) #{address}/api/getblock?hash=#{hashes.blockhash}
           li
             p
-              strong getrawtransaction [txid] [decrypt]
+              strong #{t("api.api_getrawtransaction")}
               br
-              em #{settings.locale.api_getrawtransaction}
+              em #{t("api.api_getrawtransaction_info")}
               br
               a(href='/api/getrawtransaction?txid='+hashes.txhash+'&decrypt=0') #{address}/api/getrawtransaction?txid=#{hashes.txhash}&decrypt=0
               br
               a(href='/api/getrawtransaction?txid='+hashes.txhash+'&decrypt=1') #{address}/api/getrawtransaction?txid=#{hashes.txhash}&decrypt=1
+          
           if(settings.index.show_hashrate)
             li
               p
-                strong getnetworkhashps
+                strong #{t("api.api_getnetworkhashps")}
                 br
-                em #{settings.locale.api_getnetworkhashps}
+                em #{t("api.api_getnetworkhashps_info")}
                 br
                 a(href='/api/getnetworkhashps') #{address}/api/getnetworkhashps
-
-
 
           if(settings.heavy)
             li
               p
-                strong getmaxmoney
+                strong #{t("api.api_getmaxmoney")}
                 br
-                em #{settings.locale.api_getmaxmoney}
+                em #{t("api.api_getmaxmoney_info")}
                 br
                 a(href='/api/getmaxmoney') #{address}/api/getmaxmoney
             
             li
               p
-                strong getmaxvote
+                strong #{t("api.api_getmaxvote")}
                 br
-                em #{settings.locale.api_getmaxvote}
+                em #{t("api.api_getmaxvote_info")}
                 br
                 a(href='/api/getmaxvote') #{address}/api/getmaxvote
 
             li
               p
-                strong getvote
+                strong #{t("api.api_getvote")}
                 br
-                em #{settings.locale.api_getvote}
+                em #{t("api.api_getvote_info")}
                 br
                 a(href='/api/getvote') #{address}/api/getvote
 
             li
               p
-                strong getphase
+                strong #{t("api.api_getphase")}
                 br
-                em #{settings.locale.api_getphase}
+                em #{t("api.api_getphase_info")}
                 br
                 a(href='/api/getphase') #{address}/api/getphase
 
             li
               p
-                strong getreward
+                strong #{t("api.api_getreward")}
                 br
-                em #{settings.locale.api_getreward}
+                em #{t("api.api_getreward_info")}
                 br
                 a(href='/api/getreward') #{address}/api/getreward
 
             li
               p
-                strong getsupply
+                strong #{t("api.api_getsupply")}
                 br
-                em #{settings.locale.api_getsupply}
+                em #{t("api.api_getsupply_info")}
                 br
                 a(href='/api/getsupply') #{address}/api/getsupply  
 
             li
               p
-                strong getnextrewardestimate
+                strong #{t("api.api_getnextrewardestimate")}
                 br
-                em #{settings.locale.api_getnextrewardestimate}
+                em #{t("api.api_getnextrewardestimate_info")}
                 br
                 a(href='/api/getnextrewardestimate') #{address}/api/getnextrewardestimate
 
             li
               p
-                strong getnextrewardwhenstr
+                strong #{t("api.api_getnextrewardwhenstr"}
                 br
-                em #{settings.locale.api_getnextrewardwhenstr}
+                em #{t("api.api_getnextrewardwhenstr_info")}
                 br
                 a(href='/api/getnextrewardwhenstr') #{address}/api/getnextrewardwhenstr                                              
         hr
-        h3 Extended API
+        h3 #{t("api.api_calls_ext")}
         p
-          em Return data from local indexes
+          em #{t("api.api_calls_ext_info")}
         ul
           li
             p
-              strong getmoneysupply
+              strong #{t("api.api_getmoneysupply")}
               br
               em Returns current money supply
               br
@@ -147,7 +146,7 @@ block content
 
           li
             p
-              strong getdistribution
+              strong #{t("api.api_getdistribution")}
               br
               em Returns wealth distribution stats
               br
@@ -155,7 +154,7 @@ block content
 
           li
             p
-              strong getaddress (/ext/getaddress/hash)
+              strong #{t("api.api_getaddress")}
               br
               em Returns information for given address
               br
@@ -171,7 +170,7 @@ block content
 
           li
             p
-              strong getbalance (/ext/getbalance/hash)
+              strong #{t("api.api_getbalance")}
               br
               em Returns current balance of given address
               br
@@ -179,40 +178,58 @@ block content
 
           li
             p
-              strong getlasttxsajax (/ext/getlasttxsajax/min)
+              strong #{t("api.api_getlasttxs")}
               br
               em Returns last transactions greater than [min]
               br
               em Note: returned values are in satoshis
               br
-              a(href='/ext/getlasttxsajax/100') #{address}/ext/getlasttxsajax/100                                              
+              a(href='/ext/getlasttxsajax/100') #{address}/ext/getlasttxsajax/100      
+
+          if settings.display.masternodes == true
+             li
+              p
+                strong= t("api.api_getmasternodelist")
+                br
+                em= t("api.api_getmasternodelist_info")
+                br
+                a(href='/ext/getmasternodes') #{address}/ext/getmasternodes
+
         hr
-        h3 Linking (GET)
+        h3 #{t("api.api_calls_get")}
         p
-          em Linking to the block explorer
+          em #{t("api.api_calls_get_info")}
         ul
           li
-            p
-              strong transaction (/tx/txid)
-              br
-              a(href='/tx/'+hashes.txhash) #{address}/tx/#{hashes.txhash}
+              p
+                strong= t("api.apt_get_transaction")
+                br
+                em= t("api.apt_get_transaction_info")
+                br
+                a(href='/tx/' + hashes.txhash) #{address}/tx/#{hashes.txhash}
+          
+          li
+              p
+                strong= t("api.apt_get_block")
+                br
+                em= t("api.apt_get_block_info")
+                br
+                a(href='/block/' + hashes.blockhash) #{address}/block/#{hashes.blockhash}
 
           li
-            p
-              strong block (/block/hash)
-              br
-              a(href='/block/'+hashes.blockhash) #{address}/block/#{hashes.blockhash}
+              p
+                strong= t("api.apt_get_address")
+                br
+                em= t("api.apt_get_address_info")
+                br
+                a(href='/address/' + hashes.address) #{address}/address/#{hashes.address}
 
           li
-            p
-              strong address (/address/hash)
-              br
-              a(href='/address/'+hashes.address) #{address}/address/#{hashes.address}
-
-          li
-            p
-              strong qrcode (/qr/hash)
-              br
-              a(href='/qr/'+hashes.address) #{address}/qr/#{hashes.address}
+              p
+                strong= t("api.apt_get_qrcode")
+                br
+                em= t("api.apt_get_qrcode_info")
+                br
+                a(href='/qr/' + hashes.address) #{address}/qr/#{hashes.address}
     
     .footer-padding
