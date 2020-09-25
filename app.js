@@ -12,7 +12,10 @@ var express = require('express')
   , request = require('request')
   , fs = require('fs')
   , package_metadata = require('./package.json')
-  , locale = require('./lib/locale');
+  , locale = require('./lib/locale')
+  , i18next = require('i18next')
+  , middleware = require('i18next-http-middleware')
+  , Backend = require('i18next-fs-backend');
 
 var app = express();
 
@@ -39,9 +42,38 @@ if (settings.heavy != true) {
     'getmaxvote', 'getphase', 'getreward', 'getnextrewardestimate', 'getnextrewardwhenstr',
     'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo', 'verifymessage']);
 }
+
+i18next
+  .use(Backend)
+  .use(middleware.LanguageDetector)
+  .init({
+  interpolation: {
+    format: function(value, format, lng) {
+        if (format === 'uppercase') return value.toUpperCase();
+        if(value instanceof Date) return moment(value).format(format);
+        return value;
+      }
+  },
+  backend: {
+    loadPath: __dirname + '/locale/{{lng}}/{{ns}}.json',
+    addPath: __dirname + '/locale/{{lng}}/{{ns}}.missing.json'
+  },
+  detection: {
+    order: ['querystring', 'cookie'],
+    caches: ['cookie']
+  },
+
+  fallbackLng: settings.language_fallback,
+  preload: [settings.language],
+  saveMissing: true,
+  debug: false
+});
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(middleware.handle(i18next))
 
 app.use(favicon(path.join(__dirname, settings.favicon)));
 app.use(logger('dev'));
@@ -56,7 +88,13 @@ app.use(function (req, res, next) {
   next();
 })
 
-
+// Language Files for Datatable
+app.use('/datatable/lang', function(req,res){
+  i18next.changeLanguage(req.language, (err, t) => {
+    if (err) return console.log('something went wrong loading', err);
+    res.send(i18next.t("datatable", { returnObjects: true }));
+  });   
+});
 
 // routes
 app.use('/api', bitcoinapi.app);
