@@ -14,8 +14,8 @@ var express = require('express')
   , package_metadata = require('./package.json')
   , locale = require('./lib/locale')
   , i18next = require('i18next')
-  , middleware = require('i18next-http-middleware')
-  , Backend = require('i18next-fs-backend');
+  , middleware = require('i18next-http-middleware/cjs')
+  , Backend = require('i18next-fs-backend/cjs');
 
 var app = express();
 
