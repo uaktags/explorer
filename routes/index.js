@@ -3,6 +3,7 @@ var express = require('express')
   , settings = require('../lib/settings')
   , db = require('../lib/database')
   , lib = require('../lib/explorer')
+  , coin = require('../lib/coin')
   , qr = require('qr-image')
   , formatCurrency = require('format-currency')
   , formatNum = require('format-num')
@@ -106,7 +107,6 @@ function route_get_tx(res, txid) {
 
 function route_get_index(res, error) {
   db.is_locked(function(locked) {
-    console.log('here')
     if (locked) {
       res.render('index', { active: 'home', error: error, warning: locale.initial_index_alert});
     } else {
@@ -397,7 +397,7 @@ router.get('/ext/summary', function(req, res) {
               if (hashrate == 'There was an error. Check your console.') {
                 hashrate = 0;
               }
-              var masternodesoffline = Math.floor(masternodestotal.total - masternodestotal.enabled);
+              var masternodesoffline = (coin.isMasterNode ? Math.floor(masternodestotal.total - masternodestotal.enabled) : 0 );
               res.send({ data: [{
                 difficulty: difficulty,
                 difficultyHybrid: difficultyHybrid,
@@ -405,8 +405,8 @@ router.get('/ext/summary', function(req, res) {
                 hashrate: hashrate,
                 lastPrice: stats.last_price,
                 connections: connections,
-                masternodeCountOnline: masternodestotal.enabled,
-                masternodeCountOffline: masternodesoffline,
+                masternodeCountOnline: (coin.isMasterNode ? masternodestotal.enabled : 0),
+                masternodeCountOffline: (coin.isMasterNode ? masternodesoffline : 0),
                 blockcount: blockcount
               }]});
             });
