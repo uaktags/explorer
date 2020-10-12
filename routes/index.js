@@ -1,7 +1,6 @@
 var express = require('express')
   , router = express.Router()
   , settings = require('../lib/settings')
-  //, locale = require('../lib/locale')
   , db = require('../lib/database')
   , lib = require('../lib/explorer')
   , qr = require('qr-image')
@@ -104,8 +103,10 @@ function route_get_tx(res, txid) {
   }
 }
 
+
 function route_get_index(res, error) {
   db.is_locked(function(locked) {
+    console.log('here')
     if (locked) {
       res.render('index', { active: 'home', error: error, warning: locale.initial_index_alert});
     } else {
