@@ -56,12 +56,12 @@ block content
         .col-md-6
           .card.card-default
             .card-header
-              strong #{st('tx.input_adress')}
+              strong #{t('tx.input_adress')}
               span.fa.fa-arrow-right.pull-right.d-xs-none
             table.table.table-bordered.table-striped.summary-table 
               thead
                 tr
-                  th #{=t('tx.address')}
+                  th #{t('tx.address')}
                   if (tx.vin.length > 0)
                     if tx.vin[0].addresses != 'coinbase'
                       th.d-xs-none #{t('address.amount_coin', {coin: settings.symbol})}
@@ -89,7 +89,7 @@ block content
         .col-md-6
           .card.card-default
             .card-header
-              strong #{t('tx.recipients_address')s}
+              strong #{t('tx.recipients_address')}
             table.table.table-bordered.table-striped.summary-table 
               thead
                 tr
