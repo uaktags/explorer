@@ -164,7 +164,7 @@ is_locked(function (exists) {
                           }, function() {
                             console.log('index cleared (reindex)');
                           }); 
-                          db.update_tx_db(settings.coin, 1, 22, settings.update_timeout, function(){
+                          db.update_tx_db(settings.coin, 1, stats.count, settings.update_timeout, function(){
                             db.update_richlist('received', function(){
                               db.update_richlist('balance', function(){
                                 db.get_stats(settings.coin, function(nstats){
@@ -187,7 +187,7 @@ is_locked(function (exists) {
                   });
                 } else if (mode == 'update') {
                   console.log('update started')
-                  db.update_tx_db(settings.coin, stats.last, 75, settings.update_timeout, function(){
+                  db.update_tx_db(settings.coin, stats.last, stats.count, settings.update_timeout, function(){
                     db.update_richlist('received', function(){
                       db.update_richlist('balance', function(){
                         db.get_stats(settings.coin, function(nstats){
